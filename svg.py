@@ -23,16 +23,26 @@ def svg(children=[], **kwargs):
         "svg",
         children=children,
         xmlns="http://www.w3.org/2000/svg",
-        viewBox="0 0 1 1",
+        viewBox="-2 -2 4 4",
         **kwargs
     )
 
 def circle(cx, cy, r, **kwargs):
     return tag("circle", cx=cx, cy=cy, r=r, **kwargs)
 
+# EXAMPLE ONE
 circles = []
-for x in frange(0, 1, 0.1):
-    circles.append(circle(x, x, 0.01))
+for t in frange(0, 1, 0.1):
+    circles.append(circle(t, t, 0.01))
+
+# EXAMPLE TWO
+circles = []
+for t in frange(0, 1, 0.01):
+    x = math.cos(t * math.tau)
+    y = math.sin(t * math.tau)
+    r = t * 0.05
+
+    circles.append(circle(x, y, r))
 
 output = svg(children=circles)
 print(output)
