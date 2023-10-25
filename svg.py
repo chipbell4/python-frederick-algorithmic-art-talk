@@ -44,5 +44,23 @@ for t in frange(0, 1, 0.01):
 
     circles.append(circle(x, y, r))
 
+# EXAMPLE THREE
+circles = []
+for t in frange(0, 5, 0.01):
+    theta = t * math.tau
+    spiral_radius = theta * 0.05
+
+    x = spiral_radius * math.cos(theta)
+    y = spiral_radius * math.sin(theta)
+    radius = t * 0.01
+
+    red = 0
+    green = 255 * abs(math.cos(theta))
+    blue = 255 * abs(math.sin(theta))
+    fill = f"rgb({red}, {green}, {blue})"
+
+    circles.append(circle(x, y, radius, fill=fill))
+
+
 output = svg(children=circles)
 print(output)
