@@ -1,3 +1,11 @@
+import math
+
+def frange(a, b, step):
+    x = a
+    while x < b:
+        yield x
+        x += step
+
 def tag(name, children = [], **kwargs):
     # build attributes into a string
     attributes = ""
@@ -19,6 +27,12 @@ def svg(children=[], **kwargs):
         **kwargs
     )
 
+def circle(cx, cy, r, **kwargs):
+    return tag("circle", cx=cx, cy=cy, r=r, **kwargs)
 
-output = svg()
+circles = []
+for x in frange(0, 1, 0.1):
+    circles.append(circle(x, x, 0.01))
+
+output = svg(children=circles)
 print(output)
