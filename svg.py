@@ -95,7 +95,7 @@ def lerp(p1, p2, t):
 
 
 def subdivide(p1, p2):
-    # 50% mark, 25% mark, and 75% mark
+    # The 1/3, 1/2 and 2/3 marks
     p33 = lerp(p1, p2, 0.333)
     p66 = lerp(p1, p2, 0.666)
     pM = lerp(p1, p2, 0.5)
@@ -106,13 +106,14 @@ def subdivide(p1, p2):
     pM[0] += dy * 0.2
     pM[1] += -dx * 0.2
 
+    # Return all of the newly created points
     return [
         p1,
         p33,
         pM,
         p66,
         p2,
-    ]
+    ] 
 
 
 def subdivide_all(items):
@@ -132,14 +133,14 @@ points = [
     (0, -1),
     (1.7, 0),
 ]
-subdivided = subdivide_all(points)
-for k in range(5):
-    subdivided = subdivide_all(subdivided)
+
+for k in range(3):
+    points = subdivide_all(points)
 
 output = svg(
     children=[
         line(
-            subdivided,
+            points,
             **{
                 "fill": "#444",
                 "stroke": "#444",
