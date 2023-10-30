@@ -1,12 +1,14 @@
 import math
 
+
 def frange(a, b, step):
     x = a
     while x < b:
         yield x
         x += step
 
-def tag(name, children = [], **kwargs):
+
+def tag(name, children=[], **kwargs):
     # build attributes into a string
     attributes = ""
     for attr_name, attr_value in kwargs.items():
@@ -18,21 +20,25 @@ def tag(name, children = [], **kwargs):
     middle = "\n".join(children)
     return f"<{name} {attributes}>{middle}</{name}>"
 
+
 def svg(children=[], **kwargs):
     return tag(
         "svg",
         children=children,
         xmlns="http://www.w3.org/2000/svg",
         viewBox="-2 -2 4 4",
-        **kwargs
+        **kwargs,
     )
+
 
 def circle(cx, cy, r, **kwargs):
     return tag("circle", cx=cx, cy=cy, r=r, **kwargs)
 
+
 def line(points, **kwargs):
     point_string = " ".join([f"{p[0]},{p[1]}" for p in points])
     return tag("polyline", points=point_string, **kwargs)
+
 
 # EXAMPLE ONE
 circles = []
@@ -66,20 +72,27 @@ for t in frange(0, 5, 0.01):
     circles.append(circle(x, y, radius, fill=fill))
 
 # EXAMPLE FOUR
-points = [ (0, 0), (1, 1) ]
+points = [(0, 0), (1, 1)]
 
-output = svg(children=[
-    line(points, **{
-        "stroke": "blue",
-        "stroke-width": 0.05,
-    })
-])
+output = svg(
+    children=[
+        line(
+            points,
+            **{
+                "stroke": "blue",
+                "stroke-width": 0.05,
+            },
+        )
+    ]
+)
+
 
 # EXAMPLE FIVE
 def lerp(p1, p2, t):
     x1, y1 = p1
     x2, y2 = p2
     return [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t]
+
 
 def subdivide(p1, p2):
     # 50% mark, 25% mark, and 75% mark
@@ -101,6 +114,7 @@ def subdivide(p1, p2):
         p2,
     ]
 
+
 def subdivide_all(items):
     # loop over each pair subdividing
     subdivided_items = []
@@ -110,20 +124,29 @@ def subdivide_all(items):
         subdivided_items += subdivide(left, right)
     return subdivided_items
 
+
 # start with a triangle
 points = [
-    (1.7, 0), (0, 1), (0, -1), (1.7, 0),
-] 
+    (1.7, 0),
+    (0, 1),
+    (0, -1),
+    (1.7, 0),
+]
 subdivided = subdivide_all(points)
 for k in range(5):
     subdivided = subdivide_all(subdivided)
 
-output = svg(children=[
-    line(subdivided, **{
-        "fill": "#444",
-        "stroke": "#444",
-        "stroke-width": 0.01,
-    })
-])
+output = svg(
+    children=[
+        line(
+            subdivided,
+            **{
+                "fill": "#444",
+                "stroke": "#444",
+                "stroke-width": 0.01,
+            },
+        )
+    ]
+)
 
 print(output)
