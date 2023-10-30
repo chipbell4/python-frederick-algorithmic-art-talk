@@ -30,6 +30,10 @@ def svg(children=[], **kwargs):
 def circle(cx, cy, r, **kwargs):
     return tag("circle", cx=cx, cy=cy, r=r, **kwargs)
 
+def line(points, **kwargs):
+    point_string = " ".join([f"{p[0]},{p[1]}" for p in points])
+    return tag("polyline", points=point_string, **kwargs)
+
 # EXAMPLE ONE
 circles = []
 for t in frange(0, 1, 0.1):
@@ -61,6 +65,65 @@ for t in frange(0, 5, 0.01):
 
     circles.append(circle(x, y, radius, fill=fill))
 
+# EXAMPLE FOUR
+points = [ (0, 0), (1, 1) ]
 
-output = svg(children=circles)
+output = svg(children=[
+    line(points, **{
+        "stroke": "blue",
+        "stroke-width": 0.05,
+    })
+])
+
+# EXAMPLE FIVE
+def lerp(p1, p2, t):
+    x1, y1 = p1
+    x2, y2 = p2
+    return [x1 + (x2 - x1) * t, y1 + (y2 - y1) * t]
+
+def subdivide(p1, p2):
+    # 50% mark, 25% mark, and 75% mark
+    p33 = lerp(p1, p2, 0.333)
+    p66 = lerp(p1, p2, 0.666)
+    pM = lerp(p1, p2, 0.5)
+
+    # perturb the middle point PERPENDICULAR to the original line segment
+    dx = p2[0] - p1[0]
+    dy = p2[1] - p1[1]
+    pM[0] += dy * 0.2
+    pM[1] += -dx * 0.2
+
+    return [
+        p1,
+        p33,
+        pM,
+        p66,
+        p2,
+    ]
+
+def subdivide_all(items):
+    # loop over each pair subdividing
+    subdivided_items = []
+    for left_index in range(len(items) - 1):
+        left = items[left_index]
+        right = items[left_index + 1]
+        subdivided_items += subdivide(left, right)
+    return subdivided_items
+
+# start with a triangle
+points = [
+    (1.7, 0), (0, 1), (0, -1), (1.7, 0),
+] 
+subdivided = subdivide_all(points)
+for k in range(5):
+    subdivided = subdivide_all(subdivided)
+
+output = svg(children=[
+    line(subdivided, **{
+        "fill": "#444",
+        "stroke": "#444",
+        "stroke-width": 0.01,
+    })
+])
+
 print(output)
